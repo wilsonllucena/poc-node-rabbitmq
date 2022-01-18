@@ -12,7 +12,14 @@ router.get("/", (req, res) => {
 router.post("/app1", async (req, res) => {
 	const server = new RabbitmqServer("amqp://guest:guest@localhost:5672");
 	await server.start();
+
 	await server.publishInQueue("fila-api", JSON.stringify(req.body));
+
+	await server.publishInExchange(
+		"exchange-api",
+		"rota-api",
+		JSON.stringify(req.body)
+	);
 	res.json(req.body);
 });
 
