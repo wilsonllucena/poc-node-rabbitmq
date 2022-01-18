@@ -15,11 +15,12 @@ router.post("/app1", async (req, res) => {
 
 	await server.publishInQueue("fila-api", JSON.stringify(req.body));
 
-	await server.publishInExchange(
-		"exchange-api",
-		"rota-api",
-		JSON.stringify(req.body)
-	);
+	// await server.publishInExchange(
+	//	"exchange-api",
+	//	"rota-api",
+	//	JSON.stringify(req.body)
+	// );
+
 	res.json(req.body);
 });
 
