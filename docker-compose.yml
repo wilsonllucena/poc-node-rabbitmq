@@ -1,14 +1,32 @@
 services:
     rabbitmq:
-        image: rabbitmq:3-management
-        container_name: rabbitmq
+      image: "rabbitmq:3.8-management-alpine"
+      container_name: nodejs-rabbitmq-rabbitmq
+      hostname: rabbitmq
+      restart: always
+      ports:
+        - "15672:15672"
+        - "5673:5672"
+      volumes:
+        - "./.rabbitmq_data:/var/lib/rabbitmq/mnesia"
+      environment:
+        - RABBITMQ_DEFAULT_USER=guest
+        - RABBITMQ_DEFAULT_PASS=guest
+    publisher:
+        build: ./api-productor
+        restart: always
         ports:
-            - 5672:5672
-            - 15672:15672
-        environment:
-            RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-            RABBITMQ_DEFAULT_USER: "guest"
-            RABBITMQ_DEFAULT_PASS: "guest"
-            RABBITMQ_DEFAULT_VHOST: "/"
-
-        
+          - 3001:3001
+        volumes: 
+          - ./api-productor:/usr/app
+        depends_on: 
+          - rabbitmq
+    consumer:
+          build: ./api-consumer
+          restart: always
+          ports:
+            - 3002:3002
+          volumes: 
+            - ./api-consumer:/usr/app
+          depends_on: 
+            - rabbitmq

@@ -1,0 +1,4 @@
+.rabbitmq_data/
+.history/
+.vscode/
+./*/node_modules/
